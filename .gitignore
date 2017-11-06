@@ -1,0 +1,7 @@
+Infrastructure/bin
+Infrastructure/obj
+packages
+Service/bin
+Service/obj
+WebUI/bin
+WebUI/obj
