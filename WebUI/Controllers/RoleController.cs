@@ -21,20 +21,27 @@ namespace WebUI.Controllers
             return View(_roleService.getAll());
         }
 
-        public JsonResult getPaginated(DataTableAjaxPostModel model)
+        public JsonResult GetPaginated(DataTableAjaxPostModel model)
         {
-            // action inside a standard controller
             int filteredResultsCount;
             int totalResultsCount;
-            var res = CustomSearchFunction(model, out filteredResultsCount, out totalResultsCount);
-
-            throw new NotImplementedException();
+            // action inside a standard controller
+            var res = CustomSearchFunction(model, out  filteredResultsCount, out  totalResultsCount);
+            
+            return Json(new {
+                draw = model.draw,
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+                data = res
+            });
         }
 
         private IList<role> CustomSearchFunction(DataTableAjaxPostModel model, out int filteredResultsCount, out int totalResultsCount)
         {
             var searchBy = (model.search != null) ? model.search.value : null;
             var take = model.length;
+            int skip = model.start;
+
             string sortBy = "";
             bool sortDir = true;
 
@@ -45,13 +52,13 @@ namespace WebUI.Controllers
                 sortDir = model.order[0].dir.ToLower() == "asc";
             }
 
-            var result =   _roleService.GetDataFromDbaseForPagination(searchBy, take, skip, sortBy, sortDir, out filteredResultsCount, out totalResultsCount);
+            IQueryable<role> result =   _roleService.GetDataFromDbaseForPagination(searchBy, take, skip, sortBy, sortDir, out filteredResultsCount, out totalResultsCount);
             if (result == null)
             {
                 // empty collection...
                 return new List<role>();
             }
-            return result;
+            return result.ToList();
            
         }
     }

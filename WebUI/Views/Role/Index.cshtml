@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Service.Model.role>
+﻿
 
 <link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
 <p>
@@ -7,34 +7,19 @@
 <table id="example" class="table display"  cellspacing="0"  >
     <thead>
         <tr>
+            <th>Id</th>
             <th>
-                @Html.DisplayNameFor(model => model.name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.description)
-            </th>
-            <th>Action</th>
+                Description
+            </th>            
         </tr>
         </thead>
 
     <tbody>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.description)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
-                </td>
-            </tr>
-        }
+       
 
     </tbody>
 
@@ -46,7 +31,19 @@
     
     $(document).ready(function ()
     {
-       $('#example').DataTable();
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide" : true,
+            "ajax": {
+                url: "@Url.Action("GetPaginated","Role")",
+                type : 'POST'
+            },
+            "language": {
+                "search": "",
+                "searchPlaceholder" : "Search..."
+            },
+            "columns": [{ "data": "id" }, { "data": "name" }, { "data": "description" }]
+        });
     });
 
 

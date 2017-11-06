@@ -13,13 +13,11 @@ namespace Service
 {
     public interface IRoleService
     {
-        role getById(long id);
+        role GetById(long id);
         IQueryable<role> getAll();
-        void insert(role _entity);
-
-        void update(role _entity);
-
-        void delete(role id);
+        void Insert(role _entity);
+        void Update(role _entity);
+        void Delete(role id);
         IQueryable<role> GetDataFromDbaseForPagination(string searchBy, int take, int skip, string sortBy, bool sortDir, out int filteredResultsCount, out int totalResultsCount);
         Expression<Func<tbl_role, bool>> BuildDynamicWhereClause(string searchBy);
     }
@@ -31,14 +29,14 @@ namespace Service
         {
             this._uow = new UnitOfWork();
         }
-        public void insert(role _entity)
+        public void Insert(role _entity)
         {
             tbl_role entity = new tbl_role { name = _entity.name, description = _entity.description };
             _uow.RoleRepository.Insert(entity);
             _uow.Save();
         }
 
-        public role getById(long id)
+        public role GetById(long id)
         {
             tbl_role _tbl_role = _uow.RoleRepository.GetById(id);
             return new role
@@ -62,7 +60,7 @@ namespace Service
             return roles;
         }
 
-        public void update(role _entity)
+        public void Update(role _entity)
         {
             tbl_role _tbl_role = new tbl_role
                                 {
@@ -75,7 +73,7 @@ namespace Service
             _uow.Save();
         }
 
-        public void delete(role _entity)
+        public void Delete(role _entity)
         {
             tbl_role _tbl_role = new tbl_role
             {
@@ -89,7 +87,7 @@ namespace Service
         public IQueryable<role> GetDataFromDbaseForPagination(string searchBy, int take, int skip, string sortBy, bool sortDir, out int filteredResultsCount, out int totalResultsCount)
         {
             var query = _uow.RoleRepository.GetAll();
-            dynamic whereClause = BuildDynamicWhereClause(searchBy);
+            Expression<Func<tbl_role,bool>> whereClause = BuildDynamicWhereClause(searchBy);
             IQueryable<tbl_role> _tbl_role =  _uow.RoleRepository.GetPaginated(query, whereClause, searchBy, take, skip, out totalResultsCount, out filteredResultsCount, sortBy, sortDir);
             IQueryable<role> roleQ = from a in _tbl_role
                                      select new role

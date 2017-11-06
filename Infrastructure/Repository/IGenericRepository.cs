@@ -16,7 +16,7 @@ namespace Infrastructure.Repository
         void Insert(TEntity entity);
         void Edit(TEntity entity);
         void Delete(TEntity entity);
-        IQueryable<TEntity> GetPaginated(IQueryable<TEntity> query,dynamic whereClause, string searchBy, int take, int skip, out int totalRecords, out int recordsFiltered, string sort, bool sortdir);
+        IQueryable<TEntity> GetPaginated(IQueryable<TEntity> query, Expression<Func<TEntity, bool>> whereClause, string searchBy, int take, int skip, out int totalRecords, out int recordsFiltered, string sort, bool sortdir);
         
     }
 
@@ -52,14 +52,17 @@ namespace Infrastructure.Repository
        public  IQueryable<TEntity> GetPaginated(IQueryable<TEntity> query, Expression<Func<TEntity, bool>> whereClause, string searchBy, int take, int skip, out int totalRecords, out int recordsFiltered, string sortBy, bool sortDir)
         {
             totalRecords = query.Count();
+
             query = query.Where(whereClause);
+
             if (String.IsNullOrEmpty(searchBy))
             {
-                // if we have an empty search then just order the results by Id ascending
                 sortBy = "Id";
                 sortDir = true;
             }
+
             recordsFiltered = query.Count();
+
             query = query
                    .OrderBy(sortBy, sortDir)
                    .Skip(skip)
