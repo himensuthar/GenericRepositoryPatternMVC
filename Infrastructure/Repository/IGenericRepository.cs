@@ -52,15 +52,12 @@ namespace Infrastructure.Repository
        public  IQueryable<TEntity> GetPaginated(IQueryable<TEntity> query, Expression<Func<TEntity, bool>> whereClause, string searchBy, int take, int skip, out int totalRecords, out int recordsFiltered, string sortBy, bool sortDir)
         {
             totalRecords = query.Count();
-
             query = query.Where(whereClause);
-
             if (String.IsNullOrEmpty(searchBy))
             {
                 sortBy = "Id";
                 sortDir = true;
             }
-
             recordsFiltered = query.Count();
 
             query = query

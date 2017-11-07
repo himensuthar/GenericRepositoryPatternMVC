@@ -21,6 +21,31 @@ namespace WebUI.Controllers
             return View(_roleService.getAll());
         }
 
+        [HttpGet]
+        public ActionResult Edit(long id)
+        {
+            role role = _roleService.GetById(id);
+            return View(role);
+        }
+
+        [HttpPost]
+        public JsonResult Edit(role _role)
+        {
+            bool isSuccees = false;
+            try
+            {
+                _roleService.Update(_role);
+                isSuccees = true;
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return Json(new { success = isSuccees });
+        }
+
         public JsonResult GetPaginated(DataTableAjaxPostModel model)
         {
             int filteredResultsCount;

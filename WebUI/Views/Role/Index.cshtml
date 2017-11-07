@@ -1,19 +1,19 @@
-﻿
-
-<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+﻿<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table id="example" class="table display"  cellspacing="0"  >
+<table id="example" class="table display tableContainer"  cellspacing="0"  >
     <thead>
         <tr>
-            <th>Id</th>
             <th>
                 Name
             </th>
             <th>
                 Description
-            </th>            
+            </th>
+            <th>
+                Action
+            </th>       
         </tr>
         </thead>
 
@@ -25,12 +25,62 @@
 
 </table>
 
-<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id='myModalContent'>
+                <p>Some text in the modal.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
 <script>
     
     $(document).ready(function ()
     {
+        $(".tableContainer").on("click", "a.popup", function (e) {
+
+            e.preventDefault();
+
+            $("#myModalContent").load($(this).attr('href'), function () {
+                $("#myModal").modal('show');
+                bindForm(this);
+            });
+
+        });
+
+        function bindForm(dialog) {
+            $('form', dialog).submit(
+                    function () {
+                        
+                        $.ajax({
+                            url: this.action,
+                            type: this.method,
+                            data: $(this).serialize(),
+                            success: function (result) {
+                                if (result.success) {
+                                    $("#myModal").modal('hide');
+                                }
+                                else
+                                {
+                                    alert("failed");
+                                    $("#myModalContent").html(result);
+                                    bindForm(this);
+                                }
+                            },
+                            
+
+                        });
+
+                        return false;
+                    }
+                );
+        }
+
         $('#example').DataTable({
             "processing": true,
             "serverSide" : true,
@@ -42,7 +92,18 @@
                 "search": "",
                 "searchPlaceholder" : "Search..."
             },
-            "columns": [{ "data": "id" }, { "data": "name" }, { "data": "description" }]
+            "columns":
+                [
+                    { "data": "name" },
+                    { "data": "description"},
+                    {
+                        "data": "id", "width": "50px", "render": function (data)
+                        {
+                            return '<a class="popup" href="/Role/Edit/?id='+data+'"> Edit </a>&nbsp;' +
+                                '<a class="popup" href="/Role/Delete/?id='+data+'"> Delete </a>&nbsp;'
+                        }
+                    }
+                ]
         });
     });
 

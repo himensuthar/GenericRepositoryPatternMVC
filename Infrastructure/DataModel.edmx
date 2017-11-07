@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LearnMVCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LearnMVCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="tbl_role">
           <Key>
             <PropertyRef Name="id" />
@@ -25,6 +25,7 @@
           <Property Name="phonenumber" Type="nvarchar" MaxLength="15" />
           <Property Name="dateofbirth" Type="datetime" />
           <Property Name="roleId" Type="bigint" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_User_Role">
           <End Role="tbl_role" Type="Self.tbl_role" Multiplicity="1">
@@ -48,8 +49,7 @@
             <End Role="tbl_user" EntitySet="tbl_user" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LearnMVCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -75,6 +75,7 @@
           <Property Name="dateofbirth" Type="DateTime" Precision="3" />
           <Property Name="roleId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="tbl_role" Relationship="Self.FK_User_Role" FromRole="tbl_user" ToRole="tbl_role" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_User_Role">
           <End Role="tbl_role" Type="Self.tbl_role" Multiplicity="1">
@@ -116,6 +117,7 @@
           <EntitySetMapping Name="tbl_user">
             <EntityTypeMapping TypeName="LearnMVCModel.tbl_user">
               <MappingFragment StoreEntitySet="tbl_user">
+                <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="firstname" ColumnName="firstname" />

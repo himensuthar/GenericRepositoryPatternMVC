@@ -22,6 +22,7 @@ namespace Infrastructure
         public string phonenumber { get; set; }
         public Nullable<System.DateTime> dateofbirth { get; set; }
         public long roleId { get; set; }
+        public string password { get; set; }
     
         public virtual tbl_role tbl_role { get; set; }
     }

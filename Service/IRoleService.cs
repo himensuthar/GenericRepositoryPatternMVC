@@ -43,7 +43,8 @@ namespace Service
                 {
                     id = _tbl_role.id,
                     name = _tbl_role.name,
-                    description = _tbl_role.description };
+                    description = _tbl_role.description
+                };
         }
 
         public IQueryable<role> getAll()
@@ -87,14 +88,17 @@ namespace Service
         public IQueryable<role> GetDataFromDbaseForPagination(string searchBy, int take, int skip, string sortBy, bool sortDir, out int filteredResultsCount, out int totalResultsCount)
         {
             var query = _uow.RoleRepository.GetAll();
+
             Expression<Func<tbl_role,bool>> whereClause = BuildDynamicWhereClause(searchBy);
+
             IQueryable<tbl_role> _tbl_role =  _uow.RoleRepository.GetPaginated(query, whereClause, searchBy, take, skip, out totalResultsCount, out filteredResultsCount, sortBy, sortDir);
+
             IQueryable<role> roleQ = from a in _tbl_role
                                      select new role
                                      {
                                          id = a.id,
                                          name = a.name,
-                                         description = a.name
+                                         description = a.description
                                      };
             return roleQ;
         }
@@ -105,7 +109,6 @@ namespace Service
             var predicate = PredicateBuilder.New<tbl_role>(true); // true -where(true) return all
             if (String.IsNullOrWhiteSpace(searchValue) == false)
             {
-                // as we only have 2 cols allow the user type in name 'firstname lastname' then use the list to search the first and last name of dbase
                 var searchTerms = searchValue.Split(' ').ToList().ConvertAll(x => x.ToLower());
                 predicate = predicate.Or(s => searchTerms.Any(srch => s.name.ToLower().Contains(srch)));
                 predicate = predicate.Or(s => searchTerms.Any(srch => s.description.ToLower().Contains(srch)));
